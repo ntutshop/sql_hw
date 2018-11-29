@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS MEMBER (
     phone VARCHAR(20),
     email VARCHAR(50),
     certificated TINYINT,
-    permision TINYINT,
+    permission TINYINT,
     register_time TIMESTAMP,
     PRIMARY KEY (id)
 );
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS PAYMENT (
     PRIMARY KEY (id),
     FOREIGN KEY (good_id) REFERENCES GOOD(id)
         ON UPDATE CASCADE ON DELETE CASCADE
-)
+);
 
 -- ORDER
 CREATE TABLE IF NOT EXISTS ORDER (
