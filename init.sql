@@ -1,32 +1,32 @@
 -- Create DATABASE
-CREATE DATABASE ntutdb;
+CREATE DATABASE IF NOT EXISTS ntutdb;
 
 -- MEMBER
 CREATE TABLE IF NOT EXISTS MEMBER (
-    id INT,
-    token VARCHAR(64),
-    authority VARCHAR(20),
-    username VARCHAR(25),
-    nickname VARCHAR(25),
-    phone VARCHAR(20),
-    email VARCHAR(50),
-    certificated TINYINT,
-    permission TINYINT,
-    register_time TIMESTAMP,
+    id INT NOT NULL,
+    token VARCHAR(64) NOT NULL,
+    authority VARCHAR(20) NOT NULL,
+    username VARCHAR(25) NOT NULL,
+    nickname VARCHAR(25) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    certificated TINYINT NOT NULL,
+    permission TINYINT NOT NULL,
+    register_time TIMESTAMP NOT NULL,
     PRIMARY KEY (id)
 );
 
 -- GOOD
 CREATE TABLE IF NOT EXISTS GOOD (
-    id INT,
-    member_id INT,
-    name VARCHAR(200),
-    stock INT,
-    price INT,
-    description VARCHAR(2000),
-    durability TINYINT,
-    state TINYINT,
-    publish_time TIMESTAMP,
+    id INT NOT NULL,
+    member_id INT NOT NULL,
+    name VARCHAR(200) NOT NULL,
+    stock INT NOT NULL,
+    price INT NOT NULL,
+    description VARCHAR(2000) NOT NULL,
+    durability TINYINT NOT NULL,
+    state TINYINT NOT NULL,
+    publish_time TIMESTAMP NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (member_id) REFERENCES MEMBER(id)
         ON UPDATE CASCADE ON DELETE CASCADE
@@ -34,12 +34,12 @@ CREATE TABLE IF NOT EXISTS GOOD (
 
 -- RATE
 CREATE TABLE IF NOT EXISTS RATE (
-    source_id INT,
-    target_id INT,
-    stars TINYINT,
-    comment VARCHAR(400),
-    time TIMESTAMP,
-    PRIMARY KEY (source_id, source_id),
+    source_id INT NOT NULL,
+    target_id INT NOT NULL,
+    stars TINYINT NOT NULL,
+    comment VARCHAR(400) NOT NULL,
+    time TIMESTAMP NOT NULL,
+    PRIMARY KEY (source_id, target_id),
     FOREIGN KEY (source_id) REFERENCES MEMBER(id)
         ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (target_id) REFERENCES MEMBER(id)
@@ -48,10 +48,10 @@ CREATE TABLE IF NOT EXISTS RATE (
 
 -- MESSAGE_BOARD
 CREATE TABLE IF NOT EXISTS MESSAGE_BOARD (
-    id INT,
-    source_id INT,
-    good_id INT,
-    content VARCHAR(800),
+    id INT NOT NULL,
+    source_id INT NOT NULL,
+    good_id INT NOT NULL,
+    content VARCHAR(800) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (source_id) REFERENCES MEMBER(id)
         ON UPDATE CASCADE ON DELETE CASCADE,
@@ -61,10 +61,10 @@ CREATE TABLE IF NOT EXISTS MESSAGE_BOARD (
 
 -- SHOPPING_CART
 CREATE TABLE IF NOT EXISTS SHOPPING_CART (
-    id INT,
-    member_id INT,
-    quantity INT,
-    good_id INT,
+    id INT NOT NULL,
+    member_id INT NOT NULL,
+    quantity INT NOT NULL,
+    good_id INT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (member_id) REFERENCES MEMBER(id)
         ON UPDATE CASCADE ON DELETE CASCADE,
@@ -74,10 +74,10 @@ CREATE TABLE IF NOT EXISTS SHOPPING_CART (
 
 -- SHIPPING
 CREATE TABLE IF NOT EXISTS SHIPPING (
-    id INT,
-    service VARCHAR(40),
-    fee INT,
-    good_id INT,
+    id INT NOT NULL,
+    service VARCHAR(40) NOT NULL,
+    fee INT NOT NULL,
+    good_id INT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (good_id) REFERENCES GOOD(id)
         ON UPDATE CASCADE ON DELETE CASCADE
@@ -85,24 +85,24 @@ CREATE TABLE IF NOT EXISTS SHIPPING (
 
 -- PAYMENT
 CREATE TABLE IF NOT EXISTS PAYMENT (
-    id INT,
-    good_id INT,
-    service VARCHAR(40),
+    id INT NOT NULL,
+    good_id INT NOT NULL,
+    service VARCHAR(40) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (good_id) REFERENCES GOOD(id)
         ON UPDATE CASCADE ON DELETE CASCADE
 );
 
--- ORDER
-CREATE TABLE IF NOT EXISTS ORDER (
-    id INT,
-    member_id INT,
-    shipping_id INT,
-    payment_id INT,
-    state TINYINT,
-    transaction_time TIMESTAMP,
+-- ORDERS
+CREATE TABLE IF NOT EXISTS ORDERS (
+    id INT NOT NULL,
+    member_id INT NOT NULL,
+    shipping_id INT NOT NULL,
+    payment_id INT NOT NULL,
+    state TINYINT NOT NULL,
+    transaction_time TIMESTAMP NOT NULL,
     PRIMARY KEY (id),
-     FOREIGN KEY (member_id) REFERENCES MEMBER(id)
+    FOREIGN KEY (member_id) REFERENCES MEMBER(id)
         ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (shipping_id) REFERENCES SHIPPING(id)
         ON UPDATE CASCADE ON DELETE CASCADE,
@@ -112,20 +112,20 @@ CREATE TABLE IF NOT EXISTS ORDER (
 
 -- ORDER_GOOD
 CREATE TABLE IF NOT EXISTS ORDER_GOOD (
-    good_id INT,
-    order_id INT,
-    quantity INT,
+    good_id INT NOT NULL,
+    order_id INT NOT NULL,
+    quantity INT NOT NULL,
     PRIMARY KEY (good_id, order_id),
     FOREIGN KEY (good_id) REFERENCES GOOD(id)
         ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (order_id) REFERENCES ORDER(id)
+    FOREIGN KEY (order_id) REFERENCES ORDERS(id)
         ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- TAG
 CREATE TABLE IF NOT EXISTS TAG (
-    good_id INT,
-    name VARCHAR(40),
+    good_id INT NOT NULL,
+    name VARCHAR(40) NOT NULL,
     PRIMARY KEY (good_id, name),
     FOREIGN KEY (good_id) REFERENCES GOOD(id)
         ON UPDATE CASCADE ON DELETE CASCADE
@@ -133,8 +133,8 @@ CREATE TABLE IF NOT EXISTS TAG (
 
 -- IMAGE
 CREATE TABLE IF NOT EXISTS IMAGE (
-    good_id INT,
-    path VARCHAR(50),
+    good_id INT NOT NULL,
+    path VARCHAR(50) NOT NULL,
     PRIMARY KEY (good_id, path),
     FOREIGN KEY (good_id) REFERENCES GOOD(id)
         ON UPDATE CASCADE ON DELETE CASCADE
